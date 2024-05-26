@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client, Pet
+from app.models import Client, Pet, Medicine
 
 
 class HomePageTest(TestCase):
@@ -146,3 +146,65 @@ class PetsTest(TestCase):
         )
 
         self.assertContains(response, "Formato de fecha incorrecto")
+        
+class MedicinesTest(TestCase):
+    def test_repo_use_repo_template(self):
+        response = self.client.get(reverse("medicines_repo"))
+        self.assertTemplateUsed(response, "medicines/repository.html")
+
+    def test_form_use_form_template(self):
+        response = self.client.get(reverse("medicines_form"))
+        self.assertTemplateUsed(response, "medicines/form.html")
+
+    def test_can_create_medicine(self):
+        response = self.client.post(
+            reverse("medicines_form"),
+            data={
+                "name": "Paracetamol",
+                "description": "Analgesic and antipyretic",
+                "dose": "5",
+            },
+        )
+        medicines = Medicine.objects.all()
+        self.assertEqual(len(medicines), 1)
+
+        self.assertEqual(medicines[0].name, "Paracetamol")
+        self.assertEqual(medicines[0].description, "Analgesic and antipyretic")
+        self.assertEqual(medicines[0].dose, 5)
+
+        self.assertRedirects(response, reverse("medicines_repo"))
+
+    def test_validation_errors_create_medicine(self):
+        response = self.client.post(
+            reverse("medicines_form"),
+            data={},
+        )
+
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese un descripción")
+        self.assertContains(response, "Por favor ingrese un dosis")
+
+    def test_edit_medicine_with_valid_data(self):
+        medicine = Medicine.objects.create(
+            name="Paracetamol",
+            description="Analgesic and antipyretic",
+            dose=5,
+        )
+
+        response = self.client.post(
+            reverse("medicines_form"),
+            data={
+                "id": medicine.id,
+                "name": "Ibuprofen",
+                "description": "Analgesic and anti-inflammatory",
+                "dose": "4",
+            },
+        )
+
+        # redirect after post
+        self.assertEqual(response.status_code, 302)
+
+        edited_medicine = Medicine.objects.get(pk=medicine.id)
+        self.assertEqual(edited_medicine.name, "Ibuprofen")
+        self.assertEqual(edited_medicine.description, "Analgesic and anti-inflammatory")
+        self.assertEqual(edited_medicine.dose, 4)
