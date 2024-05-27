@@ -1,5 +1,5 @@
 from django.test import TestCase
-from app.models import Client, validate_date_of_birthday, Pet
+from app.models import Client, validate_date_of_birthday, Pet, Product
 from datetime import datetime, date
 
 class ClientModelTest(TestCase):
@@ -189,3 +189,18 @@ class PetModelTest(TestCase):
     def test_non_date_string(self):
         date_str = 'not-a-date'
         self.assertEqual(validate_date_of_birthday(date_str), "Formato de fecha incorrecto")
+
+class ProductModelTest(TestCase):
+    def test_can_create_and_get_product(self):
+        Product.save_product(
+            {
+                "name": "Alimento Balanceado para perro +10 años",
+                "type": "alimento",
+                "price": "6.5",
+            }
+        )
+        products = Product.objects.all()
+        self.assertEqual(len(products), 1)
+        self.assertEqual(products[0].name, "Alimento Balanceado para perro +10 años")
+        self.assertEqual(products[0].type, "alimento")
+        self.assertEqual(products[0].price, 6.5)

@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client, Pet
+from app.models import Client, Pet, Product
 
 
 class HomePageTest(TestCase):
@@ -216,3 +216,41 @@ class PetsTest(TestCase):
         )
 
         self.assertContains(response, "Formato de fecha incorrecto")
+
+class ProductsTest(TestCase):
+    def test_validation_errors_create_product(self):
+        response = self.client.post(
+            reverse("products_form"),
+            data={},
+        )
+
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese un tipo")
+        self.assertContains(response, "Por favor ingrese un precio")    
+
+    def test_validation_invalid_price(self):
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "name": "Producto A",
+                "type": "Tipo 1",
+                "price": "-10.50",
+            },
+        )
+        self.assertContains(response, "El precio debe ser mayor a cero")
+
+    def test_can_create_product(self):
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "name": "Producto A",
+                "type": "Tipo 1",
+                "price": "10.50",
+            },
+        )
+        products = Product.objects.all()
+        self.assertEqual(len(products), 1)
+        self.assertEqual(products[0].name, "Producto A")
+        self.assertEqual(products[0].type, "Tipo 1")
+        self.assertEqual(products[0].price, 10.50)
+        self.assertRedirects(response, reverse("products_repo"))
