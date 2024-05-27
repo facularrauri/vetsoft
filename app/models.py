@@ -168,7 +168,7 @@ class Medicine(models.Model):
 
         self.name = medicine_data.get("name", "") or self.name
         self.description = medicine_data.get("description", "") or self.description
-        self.dose = medicine_data.get("dose", "") or self.dose
+        self.dose = medicine_data.get("dose", 1) or self.dose
 
         self.save()
 
