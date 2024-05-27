@@ -11,6 +11,8 @@ def validate_fields(data, required_fields):
             errors[key] = f"Por favor ingrese un {value}"
         elif key == 'email' and field_value.count("@") == 0:
             errors["email"] = "Por favor ingrese un email valido"
+        elif key == 'price' and  float(field_value) <0.0:
+            errors["price"] = "El precio debe ser mayor a cero"
         elif key == 'weight' and int(field_value) < 0:
             errors["weight"] = "El peso de la mascota no puede ser negativo"
         elif key == 'birthday':
