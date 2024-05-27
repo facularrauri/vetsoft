@@ -60,7 +60,7 @@
                         id="dose"
                         name="dose"
                         class="form-control"
-                        value="{{ medicine.dose }}"
+                        value="{{ medicine.dose }}", min=1, max=10
                         required/>
 
                     {% if errors.dose %}
