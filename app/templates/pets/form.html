@@ -70,7 +70,21 @@
                         </div>
                     {% endif %}
                 </div>
+                <div>
+                    <label for="weight" class="form-label">Peso</label>
+                    <input type="number"
+                        id="weight"
+                        name="weight"
+                        class="form-control"
+                        value="{{pet.weight}}", min=0
+                        required/>
 
+                    {% if errors.weight %}
+                        <div class="invalid-feedback">
+                            {{ errors.weight }}
+                        </div>
+                    {% endif %}
+                </div>
                 <button class="btn btn-primary">Guardar</button>
             </form>
         </div>

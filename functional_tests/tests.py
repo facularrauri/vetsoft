@@ -8,6 +8,8 @@ from django.urls import reverse
 
 from app.models import Client
 
+from datetime import datetime
+
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
 headless = os.environ.get("HEADLESS", 1) == 1
@@ -240,6 +242,7 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
             "href", reverse("clients_edit", kwargs={"id": client.id})
         )
 
+
 class PetCreateEditTestCase(PlaywrightTestCase):
     def test_should_view_errors_if_form_is_invalid(self):
         self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
@@ -251,7 +254,7 @@ class PetCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un raza")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un fecha de nacimiento")).to_be_visible()
-
+        expect(self.page.get_by_text("Por favor ingrese un peso")).to_be_visible()
         self.page.get_by_label("Nombre").fill("Manolo")
         self.page.get_by_label("Raza").fill("golden")
 
@@ -259,12 +262,16 @@ class PetCreateEditTestCase(PlaywrightTestCase):
         date_str = datetime(*future_date).strftime('%Y-%m-%d')
         self.page.get_by_label("Fecha de nacimiento").fill(date_str)
 
+        self.page.get_by_label("Peso").fill("-30")
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un raza")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un fecha de nacimiento")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un peso")).not_to_be_visible()
+        expect(self.page.get_by_text("El peso de la mascota no puede ser negativo")).to_be_visible()
         expect(self.page.get_by_text("La fecha no puede ser mayor al dia de hoy")).to_be_visible()
+
 
 
 class MedicineCreateEditTestCase(PlaywrightTestCase):
@@ -290,3 +297,4 @@ class MedicineCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un descripción")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un dosis")).not_to_be_visible()
         expect(self.page.get_by_text("La dosis debe estar entre 1 y 10")).to_be_visible()
+        

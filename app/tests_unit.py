@@ -1,6 +1,6 @@
 from django.test import TestCase
-from app.models import Client, validate_date_of_birthday, Medicine
-from datetime import datetime
+from app.models import Client, validate_date_of_birthday, Pet, Medicine
+from datetime import datetime, date
 
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
@@ -62,7 +62,113 @@ class ClientModelTest(TestCase):
 
         self.assertEqual(client_updated.phone, "221555232")
 
+
 class PetModelTest(TestCase):
+    def test_can_create_and_get_pet(self):
+        Pet.save_pet(
+            {
+                "name": "Nami",
+                "breed": "Siames",
+                "birthday": '2020-05-22',
+                "weight": 30,
+            }
+        )
+        pets = Pet.objects.all()
+        self.assertEqual(len(pets), 1)
+
+        self.assertEqual(pets[0].name, "Nami")
+        self.assertEqual(pets[0].breed, "Siames")
+        self.assertEqual(pets[0].birthday, '2020-05-22')
+        self.assertEqual(pets[0].weight, 30)
+
+    def test_can_update_pet(self):
+        Pet.save_pet(
+            {
+                "name": "Nami",
+                "breed": "Siames",
+                "birthday": '2020-05-22',
+                "weight": 30,
+            }
+        )
+        pet = Pet.objects.get(pk=1)
+
+        self.assertEqual(pet.weight, 30)
+
+        Pet.update_pet({
+            "name": pet.name,
+            "weight": 40,
+            "breed": pet.breed
+        })
+
+        pet_updated = Pet.objects.get(pk=1)
+
+        self.assertEqual(pet_updated.weight, 40)
+
+class PetModelTest(TestCase):
+    def test_can_create_and_get_pet(self):
+        Pet.save_pet(
+            {
+                "name": "Nami",
+                "breed": "Siames",
+                "birthday": '2020-05-22',
+                "weight": 30,
+            }
+        )
+        pets = Pet.objects.all()
+        self.assertEqual(len(pets), 1)
+
+        self.assertEqual(pets[0].name, "Nami")
+        self.assertEqual(pets[0].breed, "Siames")
+        self.assertEqual(pets[0].birthday, date(2020, 5, 22))
+        self.assertEqual(pets[0].weight, 30)
+
+    def test_can_update_pet(self):
+        Pet.save_pet(
+            {
+                "name": "Nami",
+                "breed": "Siames",
+                "birthday": "2020-05-22",
+                "weight": 30,
+            }
+        )
+        pet = Pet.objects.get(pk=1)
+
+        self.assertEqual(pet.weight, 30)
+
+        pet.update_pet({
+            "name": pet.name,
+            "birthday": pet.birthday.strftime('%Y-%m-%d'),
+            "weight": 40,
+            "breed": pet.breed
+        })
+
+        pet_updated = Pet.objects.get(pk=1)
+
+        self.assertEqual(pet_updated.weight, 40)
+
+    def test_update_pet_with_error(self):
+        Pet.save_pet(
+            {
+                "name": "Nami",
+                "breed": "Siames",
+                "birthday": "2020-05-22",
+                "weight": 50,
+            }
+        )
+
+        pet = Pet.objects.get(pk=1)
+
+        pet.update_pet({
+            "name": pet.name,
+            "birthday": pet.birthday.strftime('%Y-%m-%d'),
+            "weight": -50,
+            "breed": pet.breed,
+        })
+
+        pet_updated = Pet.objects.get(pk=1)
+
+        self.assertEqual(pet_updated.weight, 50)
+
     def test_valid_date(self):
         date_str = '2020-05-22'
         self.assertIsNone(validate_date_of_birthday(date_str))
@@ -83,6 +189,7 @@ class PetModelTest(TestCase):
     def test_non_date_string(self):
         date_str = 'not-a-date'
         self.assertEqual(validate_date_of_birthday(date_str), "Formato de fecha incorrecto")
+
 class MedicineModelTest(TestCase):
     def test_dose_range_validation(self):
         
