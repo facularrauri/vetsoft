@@ -205,13 +205,9 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
-        expect(
-            self.page.get_by_text("Por favor ingrese un teléfono")
-        ).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un teléfono")).not_to_be_visible()
 
-        expect(
-            self.page.get_by_text("Por favor ingrese un email valido")
-        ).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email valido")).to_be_visible()
 
     def test_should_be_able_to_edit_a_client(self):
         client = Client.objects.create(
@@ -300,3 +296,30 @@ class ProductCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un precio")).not_to_be_visible()
         expect(self.page.get_by_text("El precio debe ser mayor a cero")).to_be_visible()
 
+
+
+
+class MedicineCreateEditTestCase(PlaywrightTestCase):
+    def test_should_view_errors_if_form_is_invalid(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un descripción")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un dosis")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Ibuprofeno")
+        self.page.get_by_label("Descripción").fill("medicina para el dolor")
+        self.page.get_by_label("Dosis").fill("12")
+
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un descripción")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un dosis")).not_to_be_visible()
+        expect(self.page.get_by_text("La dosis debe estar entre 1 y 10")).to_be_visible()
+        

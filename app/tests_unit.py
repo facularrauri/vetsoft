@@ -1,5 +1,5 @@
 from django.test import TestCase
-from app.models import Client, validate_date_of_birthday, Pet, Product
+from app.models import Client, validate_date_of_birthday, Pet, Medicine, Product
 from datetime import datetime, date
 
 class ClientModelTest(TestCase):
@@ -190,6 +190,20 @@ class PetModelTest(TestCase):
         date_str = 'not-a-date'
         self.assertEqual(validate_date_of_birthday(date_str), "Formato de fecha incorrecto")
 
+class MedicineModelTest(TestCase):
+    def test_dose_range_validation(self):
+        
+        response = Medicine.save_medicine(
+            {
+                "name": "Paracetamol",
+                "description": "Analgesic and antipyretic",
+                "dose": 15
+            }
+        )
+        
+        self.assertFalse(response[0])  
+        self.assertIn("dose", response[1])  
+        self.assertEqual(response[1]["dose"], "La dosis debe estar entre 1 y 10") 
 class ProductModelTest(TestCase):
     def test_can_create_and_get_product(self):
         Product.save_product(

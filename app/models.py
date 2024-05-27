@@ -19,7 +19,8 @@ def validate_fields(data, required_fields):
             birthday_error = validate_date_of_birthday(field_value)
             if birthday_error:
                 errors["birthday"] = birthday_error
-
+        elif key =='dose' and (int(field_value) < 1 or int(field_value) > 10):
+            errors["dose"] = "La dosis debe estar entre 1 y 10"
     return errors
 
 def validate_date_of_birthday(date_str):
@@ -169,7 +170,7 @@ class Medicine(models.Model):
 
         self.name = medicine_data.get("name", "") or self.name
         self.description = medicine_data.get("description", "") or self.description
-        self.dose = medicine_data.get("dose", "") or self.dose
+        self.dose = medicine_data.get("dose", 1) or self.dose
 
         self.save()
 
