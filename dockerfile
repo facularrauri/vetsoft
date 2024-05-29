@@ -1,33 +1,29 @@
-#Se pasa versión de docker como argumento#
 ARG DOCKERFILE_VERSION=1.0
 
-#Se importa imagen de python como base de container, 
-#ya que una imagen siempre parte de otra imagen ya creada#
-#En este caso, se opta por python-slim para minimizar tamañño de imagen#
-FROM python:3.12-slim
+FROM python:3.12-slim as builder
 
-#Variable de entorno configurada para evitar que se generen archivos .pyc y .pyo 
-#(archivos compilados de phyton)#
 ENV PYTHONDONTWRITEBYTECODE 1
-
-#Variable de entorno para indicar a Docker que nos muestre el Standard Output (salida) 
-#y Standard Error(errores) en la terminal como estamos acostumbrados.
 ENV PYTHONUNBUFFERED 1
 
-#Directorio donde se creará la app en el docker#
 WORKDIR /app
 
-#Tomar archivo requeriments.txt de máquina local a contenedor para tener dependencias#
-COPY requirements.txt /app/
+COPY requirements.txt .
 
-#Ejecuta línea de python para instalar dependencias necesarias de vetsoft#
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
 
-#Copia resto de código fuente de vetsoft al contenedor#
-COPY . /app/
+FROM python:3.12-slim
 
-#Líneas de comando a ejectuar al levantar el contenedor#
-#Se corren líneas de comando en la shell para
-#1. Hacer migraciones necesarias
-#2. Correr el server en el puerto indicado en variables de entorno: env-example#
-CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:${PORT}"]
+WORKDIR /app
+
+COPY --from=builder /app/wheels /wheels
+COPY --from=builder /app/requirements.txt .
+
+RUN pip install --no-cache /wheels/*
+
+COPY . .
+
+RUN ["python", "manage.py", "collectstatic", "--no-input"]
+
+EXPOSE 8000
+
+CMD ["sh", "-c", "python manage.py migrate && gunicorn vetsoft.asgi:application -k uvicorn.workers.UvicornWorker"]
