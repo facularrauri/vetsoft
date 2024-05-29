@@ -1,8 +1,6 @@
 name: Build and Tests
 
 on:
-  push:
-    branch: [main]
   pull_request:
     branch: [main]
 
