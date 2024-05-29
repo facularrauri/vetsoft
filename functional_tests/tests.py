@@ -8,8 +8,6 @@ from django.urls import reverse
 
 from app.models import Client
 
-from datetime import datetime
-
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
 headless = os.environ.get("HEADLESS", 1) == 1
