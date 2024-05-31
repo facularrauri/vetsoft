@@ -9,8 +9,10 @@ def validate_fields(data, required_fields):
 
         if field_value == "":
             errors[key] = f"Por favor ingrese un {value}"
-        elif key == 'email' and field_value.count("@") == 0:
-            errors["email"] = "Por favor ingrese un email valido"
+        elif key == 'email':
+            email_error = validate_vetsoft_email(field_value)
+            if email_error:
+                errors["email"] = email_error
         elif key == 'price' and  float(field_value) <0.0:
             errors["price"] = "El precio debe ser mayor a cero"
         elif key == 'weight' and int(field_value) < 0:
@@ -32,6 +34,13 @@ def validate_date_of_birthday(date_str):
         return None
     except ValueError:
         return "Formato de fecha incorrecto"
+
+def validate_vetsoft_email(value):
+    if value.count("@") == 0:
+        return "Por favor ingrese un email valido"
+    if not value.endswith('@vetsoft.com'):
+        return "El email debe finalizar con @vetsoft.com"
+    return None
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
