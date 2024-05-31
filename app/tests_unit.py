@@ -11,6 +11,7 @@ from app.models import (
     validate_vetsoft_email,
 )
 
+
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
         Client.save_client(
