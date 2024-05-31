@@ -1,5 +1,7 @@
-from django.db import models
 from datetime import datetime
+
+from django.db import models
+
 
 def validate_fields(data, required_fields):
     errors = {}
