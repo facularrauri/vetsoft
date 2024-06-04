@@ -49,7 +49,7 @@ class Client(models.Model):
         return {
             "name": "nombre",
             "email": "email",
-            "phone": "teléfono"
+            "phone": "teléfono",
         }
 
     @classmethod
@@ -98,7 +98,7 @@ class Pet(models.Model):
             "name": "nombre",
             "breed": "raza", 
             "birthday": "fecha de nacimiento",
-            "weight": "peso"
+            "weight": "peso",
         }
 
     @classmethod
@@ -146,7 +146,7 @@ class Medicine(models.Model):
         return {
             "name": "nombre",
             "description": "descripción", 
-            "dose": "dosis"
+            "dose": "dosis",
         }
     
     @classmethod
@@ -159,7 +159,7 @@ class Medicine(models.Model):
         Medicine.objects.create(
             name=medicine_data.get("name"),
             description=medicine_data.get("description"),
-            dose=medicine_data.get("dose")
+            dose=medicine_data.get("dose"),
         ),
     
         return True, None
@@ -191,7 +191,7 @@ class Vet(models.Model):
         return {
             "name": "nombre",
             "email": "email", 
-            "phone": "phone"
+            "phone": "phone",
         }
     
     @classmethod
@@ -237,7 +237,7 @@ class Product(models.Model):
         return {
             "name": "nombre",
             "type": "tipo",
-            "price": "precio"
+            "price": "precio",
         }
 
     @classmethod
