@@ -2,7 +2,14 @@ from datetime import date, datetime
 
 from django.test import TestCase
 
-from app.models import Client, Medicine, Pet, Product, validate_date_of_birthday
+from app.models import (
+    Client,
+    Medicine,
+    Pet,
+    Product,
+    validate_date_of_birthday,
+    validate_vetsoft_email,
+)
 
 
 class ClientModelTest(TestCase):
@@ -12,7 +19,7 @@ class ClientModelTest(TestCase):
                 "name": "Juan Sebastian Veron",
                 "phone": "221555232",
                 "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "email": "brujita75@vetsoft.com",
             }
         )
         clients = Client.objects.all()
@@ -21,7 +28,7 @@ class ClientModelTest(TestCase):
         self.assertEqual(clients[0].name, "Juan Sebastian Veron")
         self.assertEqual(clients[0].phone, "221555232")
         self.assertEqual(clients[0].address, "13 y 44")
-        self.assertEqual(clients[0].email, "brujita75@hotmail.com")
+        self.assertEqual(clients[0].email, "brujita75@vetsoft.com")
 
     def test_can_update_client(self):
         Client.save_client(
@@ -29,7 +36,7 @@ class ClientModelTest(TestCase):
                 "name": "Juan Sebastian Veron",
                 "phone": "221555232",
                 "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "email": "brujita75@vetsoft.com",
             }
         )
         client = Client.objects.get(pk=1)
@@ -52,7 +59,7 @@ class ClientModelTest(TestCase):
                 "name": "Juan Sebastian Veron",
                 "phone": "221555232",
                 "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "email": "brujita75@vetsoft.com",
             }
         )
         client = Client.objects.get(pk=1)
@@ -64,6 +71,17 @@ class ClientModelTest(TestCase):
         client_updated = Client.objects.get(pk=1)
 
         self.assertEqual(client_updated.phone, "221555232")
+
+    def test_not_valid_email(self):
+        self.assertEqual(validate_vetsoft_email("email"), "Por favor ingrese un email valido")
+
+    def test_not_valid_vetsoft_email(self):
+        email = "test@non-vetsoft.com"
+        self.assertEqual(validate_vetsoft_email(email), "El email debe finalizar con @vetsoft.com")
+
+    def test_valid_vetsoft_email(self):
+        email = "test@vetsoft.com"
+        self.assertIsNone(validate_vetsoft_email(email))
 
 class PetModelTest(TestCase):
     def test_can_create_and_get_pet(self):

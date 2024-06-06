@@ -11,8 +11,10 @@ def validate_fields(data, required_fields):
 
         if field_value == "":
             errors[key] = f"Por favor ingrese un {value}"
-        elif key == 'email' and field_value.count("@") == 0:
-            errors["email"] = "Por favor ingrese un email valido"
+        elif key == 'email':
+            email_error = validate_vetsoft_email(field_value)
+            if email_error:
+                errors["email"] = email_error
         elif key == 'price' and  float(field_value) <0.0:
             errors["price"] = "El precio debe ser mayor a cero"
         elif key == 'weight' and int(field_value) < 0:
@@ -46,6 +48,13 @@ def validate_phone(number):
         return "El teléfono indicado debe contener sólo números"
     return None
     
+def validate_vetsoft_email(value):
+    if value.count("@") == 0:
+        return "Por favor ingrese un email valido"
+    if not value.endswith('@vetsoft.com'):
+        return "El email debe finalizar con @vetsoft.com"
+    return None
+
 class Client(models.Model):
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
@@ -60,7 +69,7 @@ class Client(models.Model):
         return {
             "name": "nombre",
             "email": "email",
-            "phone": "teléfono"
+            "phone": "teléfono",
         }
 
     @classmethod
@@ -109,7 +118,7 @@ class Pet(models.Model):
             "name": "nombre",
             "breed": "raza", 
             "birthday": "fecha de nacimiento",
-            "weight": "peso"
+            "weight": "peso",
         }
 
     @classmethod
@@ -157,7 +166,7 @@ class Medicine(models.Model):
         return {
             "name": "nombre",
             "description": "descripción", 
-            "dose": "dosis"
+            "dose": "dosis",
         }
     
     @classmethod
@@ -170,7 +179,7 @@ class Medicine(models.Model):
         Medicine.objects.create(
             name=medicine_data.get("name"),
             description=medicine_data.get("description"),
-            dose=medicine_data.get("dose")
+            dose=medicine_data.get("dose"),
         ),
     
         return True, None
@@ -202,7 +211,7 @@ class Vet(models.Model):
         return {
             "name": "nombre",
             "email": "email", 
-            "phone": "phone"
+            "phone": "phone",
         }
     
     @classmethod
@@ -248,7 +257,7 @@ class Product(models.Model):
         return {
             "name": "nombre",
             "type": "tipo",
-            "price": "precio"
+            "price": "precio",
         }
 
     @classmethod
