@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "app"
+    "app",
 ]
 
 MIDDLEWARE = [
@@ -89,7 +89,7 @@ if ENVIRONMENT == 'local':
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
-        }
+        },
     }
 elif ENVIRONMENT == 'development':
     DATABASES = {
@@ -100,7 +100,7 @@ elif ENVIRONMENT == 'development':
             'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
             'HOST': os.getenv('POSTGRES_HOST'),
             'PORT': os.getenv('POSTGRES_DB_PORT'),
-        }
+        },
     }
 
 
