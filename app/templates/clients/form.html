@@ -41,13 +41,13 @@
                 </div>
                 <div>
                     <label for="phone" class="form-label">Teléfono</label>
-                    <input type="text"
+                    <input type="tel"
                         id="phone"
                         name="phone"
                         class="form-control"
                         value="{{client.phone}}"
+                        pattern="\d+"
                         required/>
-
                     {% if errors.phone %}
                         <div class="invalid-feedback">
                             {{ errors.phone }}

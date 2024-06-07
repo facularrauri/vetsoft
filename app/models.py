@@ -25,6 +25,10 @@ def validate_fields(data, required_fields):
                 errors["birthday"] = birthday_error
         elif key =='dose' and (int(field_value) < 1 or int(field_value) > 10):
             errors["dose"] = "La dosis debe estar entre 1 y 10"
+        elif key =='phone':
+            phone_error = validate_phone(field_value)
+            if phone_error:
+                errors["phone"] = phone_error
     return errors
 
 def validate_date_of_birthday(date_str):
@@ -37,6 +41,13 @@ def validate_date_of_birthday(date_str):
     except ValueError:
         return "Formato de fecha incorrecto"
 
+def validate_phone(number):
+    print(number)
+    if not(number.isnumeric()):
+        print(number)
+        return "El teléfono indicado debe contener sólo números"
+    return None
+    
 def validate_vetsoft_email(value):
     if value.count("@") == 0:
         return "Por favor ingrese un email valido"
