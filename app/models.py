@@ -66,6 +66,8 @@ class Client(models.Model):
     
     @staticmethod
     def get_required_fields():
+        """
+        Devuelve un diccionario que mapea los campos requeridos a sus descripciones en español."""
         return {
             "name": "nombre",
             "email": "email",
@@ -74,6 +76,8 @@ class Client(models.Model):
 
     @classmethod
     def save_client(cls, client_data):
+        """
+        Crea un nuevo cliente utilizando los datos proporcionados"""
         errors = validate_fields(client_data, Client.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -89,6 +93,8 @@ class Client(models.Model):
         return True, None
 
     def update_client(self, client_data):
+        """
+        Actualiza los datos del cliente con la información proporcionada."""
         errors = validate_fields(client_data, Client.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -114,6 +120,8 @@ class Pet(models.Model):
     
     @staticmethod
     def get_required_fields():
+        """
+    Devuelve un diccionario que mapea los campos requeridos a sus descripciones en español."""
         return {
             "name": "nombre",
             "breed": "raza", 
@@ -123,6 +131,9 @@ class Pet(models.Model):
 
     @classmethod
     def save_pet(cls, pet_data):
+        """
+        Crea una nueva mascota utilizando los datos proporcionados.
+"""
         errors = validate_fields(pet_data, Pet.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -139,6 +150,8 @@ class Pet(models.Model):
         return True, None
     
     def update_pet(self, pet_data):
+        """
+        Actualiza los datos de la mascota con la información proporcionada."""
         errors = validate_fields(pet_data, Pet.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -163,6 +176,8 @@ class Medicine(models.Model):
     
     @staticmethod
     def get_required_fields():
+        """
+        Devuelve un diccionario que mapea los campos requeridos a sus descripciones en español."""
         return {
             "name": "nombre",
             "description": "descripción", 
@@ -171,6 +186,8 @@ class Medicine(models.Model):
     
     @classmethod
     def save_medicine(cls, medicine_data):
+        """
+        Crea un nuevo medicamento utilizando los datos proporcionados."""
         errors = validate_fields(medicine_data, Medicine.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -185,6 +202,8 @@ class Medicine(models.Model):
         return True, None
 
     def update_medicine(self, medicine_data):
+        """
+        Actualiza los datos del medicamento con la información proporcionada."""
         errors = validate_fields(medicine_data, Medicine.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -208,6 +227,8 @@ class Vet(models.Model):
     
     @staticmethod
     def get_required_fields():
+        """
+        Devuelve un diccionario que mapea los campos requeridos a sus descripciones en español."""
         return {
             "name": "nombre",
             "email": "email", 
@@ -216,6 +237,8 @@ class Vet(models.Model):
     
     @classmethod
     def save_vet(cls, vet_data):
+        """
+        Crea un nuevo veterinario utilizando los datos proporcionados."""
         errors = validate_fields(vet_data, Vet.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -231,6 +254,8 @@ class Vet(models.Model):
     
     
     def update_vet(self, vet_data):
+        """
+        Actualiza los datos del veterinario con la información proporcionada."""
         errors = validate_fields(vet_data, Vet.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -254,6 +279,8 @@ class Product(models.Model):
     
     @staticmethod
     def get_required_fields():
+        """
+        Devuelve un diccionario que mapea los campos requeridos a sus descripciones en español."""
         return {
             "name": "nombre",
             "type": "tipo",
@@ -262,6 +289,8 @@ class Product(models.Model):
 
     @classmethod
     def save_product(prod, product_data):
+        """
+        Crea un nuevo producto utilizando los datos proporcionados."""
         errors = validate_fields(product_data, Product.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -276,6 +305,8 @@ class Product(models.Model):
         return True, None
 
     def update_product(self, product_data):
+        """
+        Actualiza los atributos del producto con los datos proporcionados."""
         errors = validate_fields(product_data, Product.get_required_fields())
 
         if len(errors.keys()) > 0:
