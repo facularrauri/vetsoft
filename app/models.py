@@ -4,6 +4,9 @@ from django.db import models
 
 
 def validate_fields(data, required_fields):
+    """
+    Valida los campos de datos según los requisitos especificados.
+    """
     errors = {}
 
     for key, value in required_fields.items():
@@ -32,6 +35,9 @@ def validate_fields(data, required_fields):
     return errors
 
 def validate_date_of_birthday(date_str):
+    """
+    Valida si una fecha de nacimiento es válida y está en el formato correcto.
+    """
     try:
         birth_date = datetime.strptime(date_str, '%Y-%m-%d')
         today = datetime.today()
@@ -42,6 +48,9 @@ def validate_date_of_birthday(date_str):
         return "Formato de fecha incorrecto"
 
 def validate_phone(number):
+    """
+    Valida si un número de teléfono es válido y contiene solo dígitos.
+    """
     print(number)
     if not(number.isnumeric()):
         print(number)
@@ -49,6 +58,9 @@ def validate_phone(number):
     return None
     
 def validate_vetsoft_email(value):
+    """
+    Valida si una dirección de correo electrónico cumple con el formato de Vetsoft.
+    """
     if value.count("@") == 0:
         return "Por favor ingrese un email valido"
     if not value.endswith('@vetsoft.com'):
