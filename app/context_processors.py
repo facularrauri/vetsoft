@@ -10,6 +10,8 @@ links = [
 ]
 
 def navbar(request):
+    """Genera los enlaces de la barra de navegación activos basados en la solicitud.
+    """
     def add_active(link):
         copy = link.copy()
 
@@ -23,6 +25,8 @@ def navbar(request):
     return {"links": map(add_active, links)}
 
 def home_items(request):
+    """ Genera los elementos para mostrar en la página de inicio.
+    """
     items = [
         {"label": "Clientes", "href": reverse("clients_repo"), "icon": "bi bi-people"},
         {"label": "Animales", "href": reverse("pets_repo"), "icon": "fas fa-dog"},
