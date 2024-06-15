@@ -206,17 +206,21 @@ class MedicineModelTest(TestCase):
         self.assertIn("dose", response[1])  
         self.assertEqual(response[1]["dose"], "La dosis debe estar entre 1 y 10") 
 class ProductModelTest(TestCase):
-    def test_can_create_and_get_product(self):
-        Product.save_product(
-            {
-                "name": "Alimento Balanceado para perro +10 años",
-                "type": "alimento",
-                "price": "6.5",
-            }
+
+    def setUp(self):
+        # Configuración inicial de datos para las pruebas
+        Product.objects.create(
+            name="Alimento Balanceado para perro +10 años",
+            type="alimento",
+            price=6.5,
         )
+
+    def test_can_create_and_get_product(self):
+        # Recuperar todos los productos desde la base de datos
         products = Product.objects.all()
-        print(products)
         self.assertEqual(len(products), 1)
+
+        # Verificar los atributos del primer producto
         self.assertEqual(products[0].name, "Alimento Balanceado para perro +10 años")
         self.assertEqual(products[0].type, "alimento")
         self.assertEqual(products[0].price, 6.5)
