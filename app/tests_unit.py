@@ -215,6 +215,7 @@ class ProductModelTest(TestCase):
             }
         )
         products = Product.objects.all()
+        print(products)
         self.assertEqual(len(products), 1)
         self.assertEqual(products[0].name, "Alimento Balanceado para perro +10 años")
         self.assertEqual(products[0].type, "alimento")
