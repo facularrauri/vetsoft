@@ -1,7 +1,7 @@
+import re
 from datetime import datetime
 
 from django.db import models
-import re
 
 
 def validate_fields(data, required_fields):

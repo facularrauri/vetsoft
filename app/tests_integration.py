@@ -95,7 +95,7 @@ class ClientsTest(TestCase):
         )
 
 
-        self.assertContains(response, "El email debe finalizar con @vetsoft.com")
+        self.assertContains(response, "El nombre solo debe contener letras y espacios")
 
     def test_edit_user_with_valid_data(self):
         client = Client.objects.create(

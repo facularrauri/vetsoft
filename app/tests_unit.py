@@ -219,3 +219,4 @@ class ProductModelTest(TestCase):
         self.assertEqual(products[0].name, "Alimento Balanceado para perro +10 años")
         self.assertEqual(products[0].type, "alimento")
         self.assertEqual(products[0].price, 6.5)
+
