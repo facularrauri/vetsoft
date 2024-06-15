@@ -164,6 +164,33 @@ class ClientsRepoTestCase(PlaywrightTestCase):
 
         expect(self.page.get_by_text("Juan Sebastián Veron")).not_to_be_visible()
 
+class ClientCreateEditTestCase(PlaywrightTestCase):
+    # Otros métodos de prueba existentes...
+
+    def test_validate_vetsoft_name(self):
+        self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        # Caso de prueba para nombre válido
+        self.page.get_by_label("Nombre").fill("Juan Sebastián Veron")
+        self.page.get_by_label("Teléfono").fill("221555232")
+        self.page.get_by_label("Email").fill("brujita75@vetsoft.com")
+        self.page.get_by_label("Dirección").fill("13 y 44")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        # Validar que no haya errores relacionados con el nombre
+        expect(self.page.get_by_text("El nombre solo debe contener letras y espacios")).not_to_be_visible()
+
+        # Caso de prueba para nombre inválido (con caracteres especiales)
+        self.page.get_by_label("Nombre").fill("Juan*Sebastián$Veron")
+        self.page.get_by_role("button", name="Guardar").click()
+
+        # Validar que aparezca el mensaje de error esperado
+        expect(self.page.get_by_text("El nombre solo debe contener letras y espacios")).to_be_visible()
+
+
 
 class ClientCreateEditTestCase(PlaywrightTestCase):
     def test_should_be_able_to_create_a_new_client(self):
