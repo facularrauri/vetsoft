@@ -9,6 +9,7 @@ from app.models import (
     Product,
     validate_date_of_birthday,
     validate_vetsoft_email,
+    validate_vetsoft_name
 )
 
 
@@ -82,6 +83,27 @@ class ClientModelTest(TestCase):
     def test_valid_vetsoft_email(self):
         email = "test@vetsoft.com"
         self.assertIsNone(validate_vetsoft_email(email))
+
+    def test_valid_vetsoft_name(self):
+        name = "Juan Sebastian Veron"
+        result = validate_vetsoft_name(name)
+        self.assertIsNone(result)
+
+    def test_name_with_numbers(self):
+        name = "John123"
+        result = validate_vetsoft_name(name)
+        self.assertEqual(result, "El nombre solo debe contener letras y espacios")
+
+    def test_name_with_special_characters(self):
+        name = "John@Doe"
+        result = validate_vetsoft_name(name)
+        self.assertEqual(result, "El nombre solo debe contener letras y espacios")
+
+    def test_empty_name(self):
+        name = ""
+        result = validate_vetsoft_name(name)
+        self.assertEqual(result, "El nombre solo debe contener letras y espacios")
+
 
 class PetModelTest(TestCase):
     def test_can_create_and_get_pet(self):
