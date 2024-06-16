@@ -177,7 +177,7 @@ class ClientsRepoTestCase(PlaywrightTestCase):
         self.page.get_by_role("button", name="Guardar").click()
 
         # Verifica que el mensaje de error se muestre
-        expect(self.page.get_by_text("Por favor ingrese un teléfono que empiece con 54")).to_be_visible()
+        expect(self.page.get_by_text("El teléfono indicado debe contener sólo números")).to_be_visible()
 
         # Corrige el número de teléfono
         self.page.fill('input[name="phone"]', "542215678920")
