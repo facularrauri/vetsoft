@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from django.db import models
@@ -14,6 +15,10 @@ def validate_fields(data, required_fields):
 
         if field_value == "":
             errors[key] = f"Por favor ingrese un {value}"
+        elif key == 'name':
+            name_error = validate_vetsoft_name(field_value)
+            if name_error:
+                errors["name"] = name_error
         elif key == 'email':
             email_error = validate_vetsoft_email(field_value)
             if email_error:
@@ -30,6 +35,7 @@ def validate_fields(data, required_fields):
             errors["dose"] = "La dosis debe estar entre 1 y 10"
         elif key =='phone':
             phone_error = validate_phone(field_value)
+            print(phone_error)
             if phone_error:
                 errors["phone"] = phone_error
     return errors
@@ -46,6 +52,15 @@ def validate_date_of_birthday(date_str):
         return None
     except ValueError:
         return "Formato de fecha incorrecto"
+    
+def validate_vetsoft_name(value):
+    """
+    Valida si un nombre contiene solo letras, espacios y caracteres especiales comunes en español.
+    """
+    regex = r'^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$'
+    if not re.match(regex, value):
+        return "El nombre solo debe contener letras y espacios"
+    return None
 
 def validate_phone(number):
     """

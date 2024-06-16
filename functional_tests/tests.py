@@ -62,6 +62,7 @@ class HomeTestCase(PlaywrightTestCase):
 
 
 class ClientsRepoTestCase(PlaywrightTestCase):
+
     def test_should_show_message_if_table_is_empty(self):
         self.page.goto(f"{self.live_server_url}{reverse('clients_repo')}")
 
@@ -166,6 +167,13 @@ class ClientsRepoTestCase(PlaywrightTestCase):
 
 
 class ClientCreateEditTestCase(PlaywrightTestCase):
+    def fill_client_form_and_submit(self, name, phone, email, address):
+        self.page.get_by_label("Nombre").fill(name)
+        self.page.get_by_label("Teléfono").fill(phone)
+        self.page.get_by_label("Email").fill(email)
+        self.page.get_by_label("Dirección").fill(address)
+        self.page.get_by_role("button", name="Guardar").click()
+        
     def test_should_be_able_to_create_a_new_client(self):
         self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
 
@@ -219,6 +227,20 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("El email debe finalizar con @vetsoft.com")).to_be_visible()
+
+    def test_should_view_errors_if_name_is_not_valid(self):
+        self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Juan@#Sebastián Veron")
+        self.page.get_by_label("Teléfono").fill("221555232")
+        self.page.get_by_label("Email").fill("brujita75@vetsfot.com")
+        self.page.get_by_label("Dirección").fill("13 y 44")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("El nombre solo debe contener letras y espacios")).to_be_visible()
 
     def test_should_be_able_to_edit_a_client(self):
         client = Client.objects.create(
