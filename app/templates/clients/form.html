@@ -31,9 +31,9 @@
                         name="name"
                         value="{{ client.name }}"
                         class="form-control"
-                        pattern="^[a-zA-Z\s]+$"
+                        pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
                         required/>
-
+                
                     {% if errors.name %}
                         <div class="invalid-feedback">
                             {{ errors.name }}

@@ -55,9 +55,9 @@ def validate_date_of_birthday(date_str):
     
 def validate_vetsoft_name(value):
     """
-    Valida si un nombre contiene solo letras y espacios.
+    Valida si un nombre contiene solo letras, espacios y caracteres especiales comunes en español.
     """
-    regex = r'^[a-zA-Z\s]+$'
+    regex = r'^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$'
     if not re.match(regex, value):
         return "El nombre solo debe contener letras y espacios"
     return None
