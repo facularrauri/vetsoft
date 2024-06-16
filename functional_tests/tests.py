@@ -167,25 +167,25 @@ class ClientsRepoTestCase(PlaywrightTestCase):
     def test_phone_code_validation(self):
         self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
 
-        # Completa el formulario con un número de teléfono no válido
+        
         self.page.fill('input[name="name"]', "Carlos Tevez")
         self.page.fill('input[name="address"]', "9 de Julio 123")
-        self.page.fill('input[name="phone"]', "2215678920")
+        self.page.fill('input[name="phone"]', "221567892g0")
         self.page.fill('input[name="email"]', "carlitos@vetsoft.com")
 
-        # Intenta enviar el formulario
+        
         self.page.get_by_role("button", name="Guardar").click()
 
-        # Verifica que el mensaje de error se muestre
+        
         expect(self.page.get_by_text("El teléfono indicado debe contener sólo números")).to_be_visible()
 
-        # Corrige el número de teléfono
+        
         self.page.fill('input[name="phone"]', "542215678920")
 
-        # Intenta enviar el formulario nuevamente
+        
         self.page.get_by_role("button", name="Guardar").click()
 
-        # Verifica que el formulario se envíe correctamente y se redirija a la página de repositorio de clientes
+        
         expect(self.page.get_by_text("Carlos Tevez")).to_be_visible()
 
 
@@ -196,14 +196,14 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_role("form")).to_be_visible()
 
         self.page.get_by_label("Nombre").fill("Juan Sebastián Veron")
-        self.page.get_by_label("Teléfono").fill("221555232")
+        self.page.get_by_label("Teléfono").fill("54221555232")
         self.page.get_by_label("Email").fill("brujita75@vetsoft.com")
         self.page.get_by_label("Dirección").fill("13 y 44")
 
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Juan Sebastián Veron")).to_be_visible()
-        expect(self.page.get_by_text("221555232")).to_be_visible()
+        expect(self.page.get_by_text("54221555232")).to_be_visible()
         expect(self.page.get_by_text("brujita75@vetsoft.com")).to_be_visible()
         expect(self.page.get_by_text("13 y 44")).to_be_visible()
 
@@ -219,7 +219,7 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un email")).to_be_visible()
 
         self.page.get_by_label("Nombre").fill("Juan Sebastián Veron")
-        self.page.get_by_label("Teléfono").fill("221555232")
+        self.page.get_by_label("Teléfono").fill("54221555232")
         self.page.get_by_label("Email").fill("brujita75")
         self.page.get_by_label("Dirección").fill("13 y 44")
 
@@ -236,7 +236,7 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_role("form")).to_be_visible()
 
         self.page.get_by_label("Nombre").fill("Juan Sebastián Veron")
-        self.page.get_by_label("Teléfono").fill("221555232")
+        self.page.get_by_label("Teléfono").fill("54221555232")
         self.page.get_by_label("Email").fill("brujita75@not-vetsfot.com")
         self.page.get_by_label("Dirección").fill("13 y 44")
 
@@ -248,7 +248,7 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         client = Client.objects.create(
             name="Juan Sebastián Veron",
             address="13 y 44",
-            phone="221555232",
+            phone="54221555232",
             email="brujita75@vetsoft.com",
         )
 
@@ -256,7 +256,7 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         self.page.goto(f"{self.live_server_url}{path}")
 
         self.page.get_by_label("Nombre").fill("Guido Carrillo")
-        self.page.get_by_label("Teléfono").fill("221232555")
+        self.page.get_by_label("Teléfono").fill("54221232555")
         self.page.get_by_label("Email").fill("goleador@vetsoft.com")
         self.page.get_by_label("Dirección").fill("1 y 57")
 
@@ -264,12 +264,12 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
 
         expect(self.page.get_by_text("Juan Sebastián Veron")).not_to_be_visible()
         expect(self.page.get_by_text("13 y 44")).not_to_be_visible()
-        expect(self.page.get_by_text("221555232")).not_to_be_visible()
+        expect(self.page.get_by_text("54221555232")).not_to_be_visible()
         expect(self.page.get_by_text("brujita75@vetsoft.com")).not_to_be_visible()
 
         expect(self.page.get_by_text("Guido Carrillo")).to_be_visible()
         expect(self.page.get_by_text("1 y 57")).to_be_visible()
-        expect(self.page.get_by_text("221232555")).to_be_visible()
+        expect(self.page.get_by_text("54221232555")).to_be_visible()
         expect(self.page.get_by_text("goleador@vetsoft.com")).to_be_visible()
 
         edit_action = self.page.get_by_role("link", name="Editar")
