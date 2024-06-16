@@ -9,6 +9,7 @@ from app.models import (
     Product,
     validate_date_of_birthday,
     validate_vetsoft_email,
+    validate_phone
 )
 
 
@@ -17,7 +18,7 @@ class ClientModelTest(TestCase):
         Client.save_client(
             {
                 "name": "Juan Sebastian Veron",
-                "phone": "221555232",
+                "phone": "54221555232",
                 "address": "13 y 44",
                 "email": "brujita75@vetsoft.com",
             }
@@ -26,7 +27,7 @@ class ClientModelTest(TestCase):
         self.assertEqual(len(clients), 1)
 
         self.assertEqual(clients[0].name, "Juan Sebastian Veron")
-        self.assertEqual(clients[0].phone, "221555232")
+        self.assertEqual(clients[0].phone, "54221555232")
         self.assertEqual(clients[0].address, "13 y 44")
         self.assertEqual(clients[0].email, "brujita75@vetsoft.com")
 
@@ -34,43 +35,43 @@ class ClientModelTest(TestCase):
         Client.save_client(
             {
                 "name": "Juan Sebastian Veron",
-                "phone": "221555232",
+                "phone": "54221555232",
                 "address": "13 y 44",
                 "email": "brujita75@vetsoft.com",
             }
         )
         client = Client.objects.get(pk=1)
 
-        self.assertEqual(client.phone, "221555232")
+        self.assertEqual(client.phone, "54221555232")
 
         client.update_client({
             "name": client.name,
-            "phone": "221555233",
+            "phone": "54221555233",
             "email": client.email
         })
 
         client_updated = Client.objects.get(pk=1)
 
-        self.assertEqual(client_updated.phone, "221555233")
+        self.assertEqual(client_updated.phone, "54221555233")
 
     def test_update_client_with_error(self):
         Client.save_client(
             {
                 "name": "Juan Sebastian Veron",
-                "phone": "221555232",
+                "phone": "54221555232",
                 "address": "13 y 44",
                 "email": "brujita75@vetsoft.com",
             }
         )
         client = Client.objects.get(pk=1)
 
-        self.assertEqual(client.phone, "221555232")
+        self.assertEqual(client.phone, "54221555232")
 
         client.update_client({"phone": ""})
 
         client_updated = Client.objects.get(pk=1)
 
-        self.assertEqual(client_updated.phone, "221555232")
+        self.assertEqual(client_updated.phone, "54221555232")
 
     def test_not_valid_email(self):
         self.assertEqual(validate_vetsoft_email("email"), "Por favor ingrese un email valido")
@@ -82,6 +83,12 @@ class ClientModelTest(TestCase):
     def test_valid_vetsoft_email(self):
         email = "test@vetsoft.com"
         self.assertIsNone(validate_vetsoft_email(email))
+        
+    def test_not_phone_code(self):
+        phone = "1234567890"
+        self.assertEqual(validate_phone(phone), "El teléfono debe comenzar siempre con 54")
+        
+        
 
 class PetModelTest(TestCase):
     def test_can_create_and_get_pet(self):
