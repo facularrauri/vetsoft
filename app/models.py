@@ -66,11 +66,14 @@ def validate_phone(number):
     """
     Valida si un número de teléfono es válido y contiene solo dígitos.
     """
-    print(number)
     if not(number.isnumeric()):
-        print(number)
         return "El teléfono indicado debe contener sólo números"
-    return None
+    
+    regex = r'^54'
+
+    if not re.match(regex, number):
+        return "El teléfono debe comenzar siempre con 54"
+    return None 
     
 def validate_vetsoft_email(value):
     """

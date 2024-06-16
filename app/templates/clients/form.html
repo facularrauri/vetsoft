@@ -47,7 +47,7 @@
                         name="phone"
                         class="form-control"
                         value="{{client.phone}}"
-                        pattern="\d+"
+                        pattern="^54\d+$"
                         required/>
                     {% if errors.phone %}
                         <div class="invalid-feedback">
