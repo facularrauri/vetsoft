@@ -79,10 +79,14 @@ def validate_vetsoft_email(value):
     """
     Valida si una dirección de correo electrónico cumple con el formato de Vetsoft.
     """
-    if value.count("@") == 0:
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+    if not re.match(regex, value):
         return "Por favor ingrese un email valido"
-    if not value.endswith('@vetsoft.com'):
+
+    regex = r'^[a-zA-Z0-9._%+-]+@vetsoft\.com$'
+    if not re.match(regex, value):
         return "El email debe finalizar con @vetsoft.com"
+
     return None
 
 class Client(models.Model):
