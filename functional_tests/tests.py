@@ -237,6 +237,10 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un teléfono")).not_to_be_visible()
 
         expect(self.page.get_by_text("Por favor ingrese un email valido")).to_be_visible()
+
+        self.page.get_by_label("Email").fill("@vetsoft.com")
+
+        expect(self.page.get_by_text("Por favor ingrese un email valido")).to_be_visible()
     
     def test_should_view_errors_if_email_is_not_vetsoft(self):
         self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")

@@ -71,6 +71,19 @@ class ClientsTest(TestCase):
         )
 
         self.assertContains(response, "Por favor ingrese un email valido")
+
+    def test_validation_invalid_email_2(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Juan Sebastian Veron",
+                "phone": "54221555232",
+                "address": "13 y 44",
+                "email": "@vetsoft.com",
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese un email valido")
         
     def test_validation_invalid_phone_code(self):
         response = self.client.post(
@@ -96,6 +109,8 @@ class ClientsTest(TestCase):
                 "email": "brujita75@hotmail.com",
             },
         )
+
+        self.assertContains(response, "El email debe finalizar con @vetsoft.com")
 
     def test_validation_not_vetsoft_name(self):
         response = self.client.post(
