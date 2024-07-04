@@ -171,14 +171,14 @@ class ClientsRepoTestCase(PlaywrightTestCase):
         
         self.page.fill('input[name="name"]', "Carlos Tevez")
         self.page.fill('input[name="address"]', "9 de Julio 123")
-        self.page.fill('input[name="phone"]', "221567892g0")
+        self.page.fill('input[name="phone"]', "2215678920")
         self.page.fill('input[name="email"]', "carlitos@vetsoft.com")
 
         
         self.page.get_by_role("button", name="Guardar").click()
 
         
-        expect(self.page.get_by_text("El teléfono indicado debe contener sólo números")).to_be_visible()
+        expect(self.page.get_by_text("El teléfono debe comenzar siempre con 54")).to_be_visible()
 
         
         self.page.fill('input[name="phone"]', "542215678920")
