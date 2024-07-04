@@ -77,6 +77,10 @@ class ClientModelTest(TestCase):
     def test_not_valid_email(self):
         self.assertEqual(validate_vetsoft_email("email"), "Por favor ingrese un email valido")
 
+    def test_not_valid_email_2(self):
+        email = "@vetsoft.com"
+        self.assertEqual(validate_vetsoft_email(email), "Por favor ingrese un email valido")
+
     def test_not_valid_vetsoft_email(self):
         email = "test@non-vetsoft.com"
         self.assertEqual(validate_vetsoft_email(email), "El email debe finalizar con @vetsoft.com")
