@@ -29,10 +29,11 @@
                     <input type="text"
                         id="name"
                         name="name"
-                        value="{{client.name}}"
+                        value="{{ client.name }}"
                         class="form-control"
+                        pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
                         required/>
-
+                
                     {% if errors.name %}
                         <div class="invalid-feedback">
                             {{ errors.name }}
@@ -46,7 +47,7 @@
                         name="phone"
                         class="form-control"
                         value="{{client.phone}}"
-                        pattern="\d+"
+                        pattern="^54\d+$"
                         required/>
                     {% if errors.phone %}
                         <div class="invalid-feedback">

@@ -1,9 +1,13 @@
+import re
 from datetime import datetime
 
 from django.db import models
 
 
 def validate_fields(data, required_fields):
+    """
+    Valida los campos de datos según los requisitos especificados.
+    """
     errors = {}
 
     for key, value in required_fields.items():
@@ -11,6 +15,10 @@ def validate_fields(data, required_fields):
 
         if field_value == "":
             errors[key] = f"Por favor ingrese un {value}"
+        elif key == 'name':
+            name_error = validate_vetsoft_name(field_value)
+            if name_error:
+                errors["name"] = name_error
         elif key == 'email':
             email_error = validate_vetsoft_email(field_value)
             if email_error:
@@ -27,11 +35,15 @@ def validate_fields(data, required_fields):
             errors["dose"] = "La dosis debe estar entre 1 y 10"
         elif key =='phone':
             phone_error = validate_phone(field_value)
+            print(phone_error)
             if phone_error:
                 errors["phone"] = phone_error
     return errors
 
 def validate_date_of_birthday(date_str):
+    """
+    Valida si una fecha de nacimiento es válida y está en el formato correcto.
+    """
     try:
         birth_date = datetime.strptime(date_str, '%Y-%m-%d')
         today = datetime.today()
@@ -40,19 +52,41 @@ def validate_date_of_birthday(date_str):
         return None
     except ValueError:
         return "Formato de fecha incorrecto"
+    
+def validate_vetsoft_name(value):
+    """
+    Valida si un nombre contiene solo letras, espacios y caracteres especiales comunes en español.
+    """
+    regex = r'^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$'
+    if not re.match(regex, value):
+        return "El nombre solo debe contener letras y espacios"
+    return None
 
 def validate_phone(number):
-    print(number)
+    """
+    Valida si un número de teléfono es válido y contiene solo dígitos.
+    """
     if not(number.isnumeric()):
-        print(number)
         return "El teléfono indicado debe contener sólo números"
-    return None
+    
+    regex = r'^54'
+
+    if not re.match(regex, number):
+        return "El teléfono debe comenzar siempre con 54"
+    return None 
     
 def validate_vetsoft_email(value):
-    if value.count("@") == 0:
+    """
+    Valida si una dirección de correo electrónico cumple con el formato de Vetsoft.
+    """
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+    if not re.match(regex, value):
         return "Por favor ingrese un email valido"
-    if not value.endswith('@vetsoft.com'):
+
+    regex = r'^[a-zA-Z0-9._%+-]+@vetsoft\.com$'
+    if not re.match(regex, value):
         return "El email debe finalizar con @vetsoft.com"
+
     return None
 
 class Client(models.Model):
@@ -66,6 +100,8 @@ class Client(models.Model):
     
     @staticmethod
     def get_required_fields():
+        """
+        Devuelve un diccionario que mapea los campos requeridos a sus descripciones en español."""
         return {
             "name": "nombre",
             "email": "email",
@@ -74,6 +110,8 @@ class Client(models.Model):
 
     @classmethod
     def save_client(cls, client_data):
+        """
+        Crea un nuevo cliente utilizando los datos proporcionados"""
         errors = validate_fields(client_data, Client.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -89,6 +127,8 @@ class Client(models.Model):
         return True, None
 
     def update_client(self, client_data):
+        """
+        Actualiza los datos del cliente con la información proporcionada."""
         errors = validate_fields(client_data, Client.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -114,6 +154,8 @@ class Pet(models.Model):
     
     @staticmethod
     def get_required_fields():
+        """
+    Devuelve un diccionario que mapea los campos requeridos a sus descripciones en español."""
         return {
             "name": "nombre",
             "breed": "raza", 
@@ -123,6 +165,9 @@ class Pet(models.Model):
 
     @classmethod
     def save_pet(cls, pet_data):
+        """
+        Crea una nueva mascota utilizando los datos proporcionados.
+"""
         errors = validate_fields(pet_data, Pet.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -139,6 +184,8 @@ class Pet(models.Model):
         return True, None
     
     def update_pet(self, pet_data):
+        """
+        Actualiza los datos de la mascota con la información proporcionada."""
         errors = validate_fields(pet_data, Pet.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -163,6 +210,8 @@ class Medicine(models.Model):
     
     @staticmethod
     def get_required_fields():
+        """
+        Devuelve un diccionario que mapea los campos requeridos a sus descripciones en español."""
         return {
             "name": "nombre",
             "description": "descripción", 
@@ -171,6 +220,8 @@ class Medicine(models.Model):
     
     @classmethod
     def save_medicine(cls, medicine_data):
+        """
+        Crea un nuevo medicamento utilizando los datos proporcionados."""
         errors = validate_fields(medicine_data, Medicine.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -185,6 +236,8 @@ class Medicine(models.Model):
         return True, None
 
     def update_medicine(self, medicine_data):
+        """
+        Actualiza los datos del medicamento con la información proporcionada."""
         errors = validate_fields(medicine_data, Medicine.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -208,6 +261,8 @@ class Vet(models.Model):
     
     @staticmethod
     def get_required_fields():
+        """
+        Devuelve un diccionario que mapea los campos requeridos a sus descripciones en español."""
         return {
             "name": "nombre",
             "email": "email", 
@@ -216,6 +271,8 @@ class Vet(models.Model):
     
     @classmethod
     def save_vet(cls, vet_data):
+        """
+        Crea un nuevo veterinario utilizando los datos proporcionados."""
         errors = validate_fields(vet_data, Vet.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -231,6 +288,8 @@ class Vet(models.Model):
     
     
     def update_vet(self, vet_data):
+        """
+        Actualiza los datos del veterinario con la información proporcionada."""
         errors = validate_fields(vet_data, Vet.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -254,6 +313,8 @@ class Product(models.Model):
     
     @staticmethod
     def get_required_fields():
+        """
+        Devuelve un diccionario que mapea los campos requeridos a sus descripciones en español."""
         return {
             "name": "nombre",
             "type": "tipo",
@@ -262,6 +323,8 @@ class Product(models.Model):
 
     @classmethod
     def save_product(prod, product_data):
+        """
+        Crea un nuevo producto utilizando los datos proporcionados."""
         errors = validate_fields(product_data, Product.get_required_fields())
 
         if len(errors.keys()) > 0:
@@ -276,6 +339,8 @@ class Product(models.Model):
         return True, None
 
     def update_product(self, product_data):
+        """
+        Actualiza los atributos del producto con los datos proporcionados."""
         errors = validate_fields(product_data, Product.get_required_fields())
 
         if len(errors.keys()) > 0:
