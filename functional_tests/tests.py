@@ -293,6 +293,20 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
 
         expect(self.page.get_by_text("El nombre solo debe contener letras y espacios")).to_be_visible()
 
+    def test_should_view_errors_if_phone_is_not_numeric(self):
+        self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Juan Sebastián Veron")
+        self.page.get_by_label("Teléfono").fill("2215ab55232")
+        self.page.get_by_label("Email").fill("brujita75@vetsfot.com")
+        self.page.get_by_label("Dirección").fill("13 y 44")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("El teléfono indicado debe contener sólo números")).to_be_visible()
+    
     def test_should_be_able_to_edit_a_client(self):
         client = Client.objects.create(
             name="Juan Sebastián Veron",

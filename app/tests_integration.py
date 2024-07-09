@@ -112,6 +112,18 @@ class ClientsTest(TestCase):
 
         self.assertContains(response, "El email debe finalizar con @vetsoft.com")
 
+    def test_validation_not_numeric_phone(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Juan Sebastian Veron",
+                "phone": "221abc5232",
+                "address": "13 y 44",
+                "email": "brujita75@vetsoft.com",
+            },
+        )
+        self.assertContains(response, "El teléfono indicado debe contener sólo números")
+
     def test_validation_not_vetsoft_name(self):
         response = self.client.post(
             reverse("clients_form"),
@@ -122,7 +134,6 @@ class ClientsTest(TestCase):
                 "email": "brujita75@vetsoft.com",
             },
         )
-
 
         self.assertContains(response, "El nombre solo debe contener letras y espacios")
 

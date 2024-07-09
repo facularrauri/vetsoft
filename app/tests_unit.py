@@ -137,6 +137,10 @@ class ClientModelTest(TestCase):
         self.assertEqual(result, "El nombre solo debe contener letras y espacios")
 
 
+    def test_not_numeric_phone(self):
+        phone = "2355ab7963"
+        self.assertEqual(validate_phone(phone), "El teléfono indicado debe contener sólo números")
+
 class PetModelTest(TestCase):
     def test_can_create_and_get_pet(self):
         Pet.save_pet(
